@@ -9,26 +9,37 @@
 A [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) Web
 plugin that folds every run of consecutive **tool calls and thinking steps**
 between messages into a single `[N steps]` bracket. Click the bracket to
-collapse the whole run into one line; click it again to expand it back. Each
-card keeps its own collapsible `input` / `output` / `reasoning` sections, so the
-steps collapse "once more" on top of their own per-card collapse.
+collapse the whole run into one line; click it again to expand it back. The
+shipped conversation cards and markdown answers are left untouched — the
+brackets are drawn around them, not instead of them.
 
 ## What it does
 
-- Registers collapse-aware renderers for `tool-call`, `workflow-run`, and
-  thinking-only `assistant-step` conversation nodes (via the
-  `conversation.chat.node` keyed slot).
-- Groups a maximal run of consecutive step nodes into one bracket:
-  `[▾ N steps]` when expanded, `[▸ N steps]` when collapsed.
-- Collapsing hides every step in the run; expanding restores them.
-- The final assistant answer and user messages stay visible as group
+- Adds a **Collapse steps / Expand steps** control to the session header, and a
+  `[▾ N steps]` bracket before every run of consecutive step nodes.
+- Collapsing a bracket hides that run's rows (`display: none`, so no empty
+  gaps are left behind) and turns the bracket into `[↕ N steps]`; clicking it
+  restores the rows.
+- A "step" is a `tool-call`, a `workflow-run`, or a thinking-only
+  `assistant-step`; the final text answer and user messages act as group
   boundaries.
+- The regular tool cards, reasoning sections, and markdown answer rendering
+  all remain the shipped DSH ones.
+
+## How it works
+
+The slot system gives a plugin no way to wrap the shipped conversation cards,
+so instead of replacing the step renderers this plugin annotates the shipped
+DOM: it reads the conversation node order through the session hook, computes
+the runs of consecutive steps, and inserts the bracket headers directly into
+the existing flow (the node rows themselves are never moved, so the shipped
+view keeps reconciling normally).
 
 ## Files
 
 | File | Purpose |
 | --- | --- |
-| `lib/client.js` | Browser half — the bracket UI, collapse state, and the step renderers. |
+| `lib/client.js` | Browser half — the header control, bracket insertion, and collapse state. |
 | `lib/index.js` | Host half — no-op; the plugin is client-only. |
 | `lib/invariant.js` | Invariant registration. |
 | `cordis.patch.yml` | Composition patch that inserts the plugin row. |
@@ -42,25 +53,10 @@ dsh plugin --profile web add github:mervyn-teo/dsh-plugin-collapsible-steps
 
 Then restart `dsh web` — host bundles load at boot.
 
-## Tradeoffs
-
-The slot system offers a plugin no way to wrap the shipped conversation cards
-while also grouping them, so taking over the group means taking over those
-nodes' rendering:
-
-- Tool cards render as compact summaries (name + status + collapsible
-  input/output) instead of the rich per-tool views (diffs, images).
-- The assistant answer is rendered as plain text with fenced code blocks
-  preserved; rich markdown (bold, inline code, lists, tables) is not rendered,
-  and reasoning shows as a collapsed "thinking" section.
-
-These are intentional: they keep the group-collapse feature self-contained and
-the answer text intact.
-
 ## Requirements
 
 - DSH with the base conversation UI (`@deepseek-ai/dsh-client-ui-conversation`)
-  mounted — the plugin registers into its `conversation.chat.node` slot.
+  mounted — the plugin inserts brackets into its chat flow.
 
 ## License
 
