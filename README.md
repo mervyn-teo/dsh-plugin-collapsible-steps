@@ -7,21 +7,23 @@
 </p>
 
 A [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) Web
-plugin that folds every run of consecutive **tool calls and thinking steps**
-between messages into a single `[N steps]` bracket. Click the bracket to
-collapse the whole run into one line; click it again to expand it back. The
-shipped conversation cards and markdown answers are left untouched — the
-brackets are drawn around them, not instead of them.
+plugin that folds every run of consecutive collapsible-card steps between
+messages into a single `+ N steps` row. Click the row to collapse the run
+(hiding all but the most recent step) or expand it back. The shipped
+conversation cards and markdown answers are left untouched — the rows are
+annotated, never replaced.
 
 ## What it does
 
 - Adds a **Collapse steps / Expand steps** control to the session header, and a
-  `[▾ N steps]` bracket before every run of consecutive step nodes.
-- Collapsing a bracket hides that run's rows (`display: none`, so no empty
-  gaps are left behind) and turns the bracket into `[↕ N steps]`; clicking it
-  restores the rows.
-- A "step" is a `tool-call`, a `workflow-run`, or a thinking-only
-  `assistant-step`; the final text answer and user messages act as group
+  `- N steps` row before every run of consecutive step nodes.
+- Collapsing a row hides that run's rows (`display: none`, so no empty gaps
+  are left behind) except the most recent one, which stays below the
+  `+ N steps` text; clicking `+` expands the run back.
+- A "step" is any collapsible-card row — `tool-call`, `workflow-run`,
+  `command`, `command-input`, `compaction`, `context` (context injection),
+  `manual-compaction`, `model-retry`, and thinking-only `assistant-step`.
+  The final text answer, user/steering messages, and turn notices act as group
   boundaries.
 - The regular tool cards, reasoning sections, and markdown answer rendering
   all remain the shipped DSH ones.
