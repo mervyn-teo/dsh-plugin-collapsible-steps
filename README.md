@@ -22,11 +22,20 @@ annotated, never replaced.
   `+ N steps` text; clicking `+` expands the run back.
 - A "step" is any collapsible-card row — `tool-call`, `workflow-run`,
   `command`, `command-input`, `compaction`, `context` (context injection),
-  `manual-compaction`, `model-retry`, and thinking-only `assistant-step`.
-  The final text answer, user/steering messages, and turn notices act as group
-  boundaries.
+  `manual-compaction`, `model-retry`, and an assistant message's `Think`
+  (reasoning) disclosure. The final text answer, user/steering messages, and
+  turn notices act as group boundaries.
 - The regular tool cards, reasoning sections, and markdown answer rendering
   all remain the shipped DSH ones.
+- A **Collapsible steps** card under Settings → Plugins controls whether runs
+  are collapsed by default.
+
+## Settings
+
+The plugin registers a `collapsible-steps` settings namespace with one option:
+
+- `collapseByDefault` (boolean, default `true`) — collapse runs of steps by
+  default. Turn it off to keep runs expanded until you collapse them manually.
 
 ## How it works
 
@@ -41,10 +50,10 @@ view keeps reconciling normally).
 
 | File | Purpose |
 | --- | --- |
-| `lib/client.js` | Browser half — the header control, bracket insertion, and collapse state. |
-| `lib/index.js` | Host half — no-op; the plugin is client-only. |
+| `lib/client.js` | Browser half — the header control, bracket insertion, collapse state, and the settings card. |
+| `lib/index.js` | Host half — registers the `collapsible-steps` settings namespace. |
 | `lib/invariant.js` | Invariant registration. |
-| `cordis.patch.yml` | Composition patch that inserts the plugin row. |
+| `cordis.patch.yml` | Composition patch that inserts the plugin row and its default config. |
 | `package.json` | Package metadata (`dsh.bundle` + `dsh.client` manifest). |
 
 ## Install
