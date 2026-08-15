@@ -1,11 +1,14 @@
-# Patch for dsh-plugin-collapsible-steps: one client row.
+# Patch for dsh-plugin-collapsible-steps: one bundle row.
 #
-# This plugin has no host half of its own — the whole feature is the browser
-# effect in lib/client.js, which folds every run of consecutive tool-call /
-# workflow-run / thinking-only assistant-step conversation nodes into a single
-# `[N steps]` bracket that collapses on click. The row below only registers the
-# bundle so its client half loads on boot.
+# The whole feature is the browser effect in lib/client.js, which folds every
+# run of consecutive collapsible-card conversation nodes (tool calls, thinking,
+# context injection, commands, compactions, retries) into a single +/- steps
+# row. The host half registers a settings namespace so the "collapse by default"
+# preference persists; the row below carries its composition default.
 
 - insert:
     - id: collapsible-steps
       name: dsh-plugin-collapsible-steps
+      config:
+        # Collapse consecutive steps by default (users can override in Plugins settings).
+        collapseByDefault: true
