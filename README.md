@@ -6,6 +6,8 @@
   </a>
 </p>
 
+English | [中文](README.zh.md)
+
 A [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) Web
 plugin that folds every run of consecutive collapsible-card steps between
 messages into a single `+ N steps` row. Click the row to collapse the run
