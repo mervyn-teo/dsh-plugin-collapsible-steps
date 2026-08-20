@@ -15,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/mervyn-teo/dsh-plugin-collapsible-steps.git"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -53,10 +53,6 @@
     }
   },
   "license": "MIT",
-  "dependencies": {
-    "@deepseek-ai/dsh-settings": "^0.1.0-rc.6",
-    "@deepseek-ai/schemastery": "^3.18.1"
-  },
   "peerDependencies": {
     "react": "^18.2.0",
     "@deepseek-ai/cordis": "^4.0.1",
